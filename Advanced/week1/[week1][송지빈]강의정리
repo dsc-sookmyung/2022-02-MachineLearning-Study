@@ -1,0 +1,179 @@
+# **Lecture 1 | Introduction to Convolutional Neural Networks for Visual Recognition**
+
+## Computer Vision이란?
+
+Computer Vision
+
+- 컴퓨터 과학의 연구 분야 중 인간이 시각적으로 하는일들을 대행하도록 시스템을 만드는것
+
+## Vision의 역사
+
+- 생물학적 Vision
+    - 현재 동물의 큰 감각 체계
+    - 인간의 대뇌 절반 갸량의 뉴런이 시각 처리에 관여
+- 인공적 Vision
+    - 카메라
+        - 1600년대 카메라인 Obscura 발명으로 시작으로 카메라 기술 발전
+        - 가장 많이 사용하는 센서로 사용됨
+
+## Computer Vision의 역사
+
+1. 포유류의 시각처리방식 연구(Hubel & Wiesel, 1959)
+    
+    ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/1f3d95cd-2822-425d-970a-0d9e768f070b/Untitled.png)
+    
+    - 고양이의 뇌에 전기적 신호를 보내고 1차 시각 피질에 다양한 종류의 세포가 있음을 발견
+    - Simple cells
+        - 1차 시각 피질에서 가장 중요한 세포
+        - 특정한 방향으로 이동할 때 oriented edge에 반응
+        - 시각처리가 시작되는 곳
+    - 시각 처리가 단순한 구조로 시작하여 점점 복잡해지는 것을 발견
+2. Block World(Larry Roberts, 1963)
+    
+    ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/821e6b42-8934-485e-8c8a-71558f44b048/Untitled.png)
+    
+    - 사물을 기하학적인 모양으로 단순화
+3. The Summer Vision Project(MIT, 1966)
+4.  Hierachical Model(David Marr, 1970s)
+    - 우리의 눈에 인식된 이미지를 3D로 표현하기 위한 3단계 과정   
+    ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/a4d4215c-8244-4091-a0d0-56034cce8181/Untitled.png)
+    
+
+1. Generalized Cylinder(1979), Pictorial Structure(1973)
+    - 모든 물체는 단순한 기하학적 구조로 이루어졌다
+    
+    ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/68ef1ab2-1754-420f-98c6-38abbbc600c7/Untitled.png)
+    
+
+1. 이미지 인식을 객체 분할로 시작(1980s)
+    
+    ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/6c9dace7-8f3c-4e80-9cbb-ca53aa5707d1/Untitled.png)
+    
+    - 배경: 실제 세계를 단순화된 구조로 인식하기 어려움
+    - 이미지의 픽셀들을 그룹화하여 의미있는 영역으로 분할하기
+2.  Face Detection(Paul Viola, Michael Jones, 2001)
+    - AdaBoost algorithm 사용 → 실시간 얼굴 인식 가능해짐
+        
+        ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/9e1de6eb-d112-4791-9dcc-3df3b5a38408/Untitled.png)
+        
+    
+3. Shift & Object Recognition(David Lowe, 1999)
+    
+    ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/285bb2e6-54c7-46f2-8acf-bc4888bdabd1/Untitled.png)
+    
+    - 카메라 각도에 따라서 이미지가 달라짐 → 같은 객체로 인식해야함
+    - 연구방향이 객체 분할에서 객체 인식으로 바뀜
+    - 객체를 인식하기 위한 중요한 특징을 찾기 → 유사한 객체와 그러한 특징을 맞춰보기
+
+## ImageNet Project
+
+- 목표
+    1. 세상 모든 이미지 분류
+    2. 기계학습의 Overfitting 문제 극복
+        1. 고차원 데이터, 훈련 세트 부족
+- 2012년 ImageNet 국제대회 ILSVRC 개최에서 CNN(Convolutional Neural Network) 도입으로  기존 28.2%, 25%의 오류율을 16.4%로 오차율이 급격히 감소되었다.
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/851428dd-9fcf-408d-bd6b-17acc0f58112/Untitled.png)
+
+# **Lecture 2 | Image Classification**
+
+## Image Classification이란
+
+- 컴퓨터 비전에서 가장 중요한 Task
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/aa52c6b2-6456-47de-9cf7-575fb32f2511/Untitled.png)
+
+- 이미지가 주어졌을 때 시스템에서 미리 label해놓은 분류된 이미지 집합 중, 어디에 속할지 컴퓨터가 판단하는 것
+- 문제: Semantic Gap
+    - 카메라 각도나 밝기, 객채의 행동 혹은 가려짐 등 여러차이로 인해 이미지의 픽셀 값이 달리 읽어 사물을 다르게  인식하는데, 고양이라는 객체와 컴퓨터가 보는 픽셀의 숫자들 간에 격차가 생김
+- 방법1
+    
+    ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/b5fe78f3-fa85-482e-874d-43119f3b8608/Untitled.png)
+    
+    - 객체의 특징을 규정 → 성능 좋지 못하고 다른 데이터에 적용시키기에 비효율적
+- 방법2
+    - 데이터 중심 접근 방법(Data-Driven Approach)
+    
+    ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/17a984dd-e52d-4608-af9e-4fc8cd79cd1b/Untitled.png)
+    
+    - 객체의 특징을 규정하지 않고, 다양한 사진들과 label을 수집하고, 이를 이용해 모델을 학습하여 사진을 새롭게 분류하는 방식
+
+## **Nearest Neighbor(NN)**
+
+- 입력받은 데이터를 저장한 다음 새로운 입력 데이터가 들어오면, 기존 데이터에서 비교하여 가장 유사한 데이터를 찾아내는 매우 간단한 방식
+- **Distance Metric(Manhattan Distance)공식 사용**
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/19c498d3-20b9-4cd1-9a9a-33947f39a7c0/Untitled.png)
+
+- |(test 이미지의 픽셀값)- (train 이미지의 픽셀값)| → 각 픽셀의 값을 모두 더해 하나의 출력값으로 만든다.
+- 단점: 모든 사진의 픽셀값의 계산하기 때문에 예측 과정에서 소요되는 시간이 상당하다.
+- 방법: **K-Nearest Neighbors**
+    
+    ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/a7f821b7-52f0-4432-bd58-0b155b475607/Untitled.png)
+    
+    - D**istance metric**를 이용해서 가까운 이웃을 k개만큼 찾고, 이웃간에 투표를 하여 득표수가 많이 얻은 label로 예측하는 방법
+    - 가장 가까운 이웃이 존재하지 않으면 흰색으로 표기된다.
+    
+    ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/2c857392-bbb6-46cf-b8bc-e4451fe1d846/Untitled.png)
+    
+    - 
+    - L1 Distance
+        - 마름모 형태
+        - 좌표계를  회전 시 거리값이 달라짐
+    - L2 Distance(**Euclidean Distance**)
+        - 원형의 형태
+        - 좌표계를  회전해도 거리값은 좌표의 영향을 받지 않는다.
+- 하이퍼 파라미터
+    - k, distance ⇒ 여러가지 시도해보면서 최적의 하이퍼 파라미터 찾기
+- 학습 방법
+    1. 일반적으로 데이터를 Train, Validation, test로 3개로 나누어 학습하고 예측
+    2. Cross Vaildation(교차검증)
+    - 작은 데이터셋일 경우 많이 사용하고 딥러닝에서는 많이 사용하지 않음
+- KNN이 실제로 사용되지 않는 이유
+    1. 너무 느림
+    2. L1, L2 Distance는 이미지 거리 구하는데 적합하지 않다.
+        
+        ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/ad96d101-f557-40d9-a67b-ef92ca3cb6f9/Untitled.png)
+        
+        - 부분적인 차이를 감지하기 어렵다
+
+## **Linear Classification(선형분류)**
+
+- Neural Network(NN)과 Convolution Neural Network(CNN)의 기반 알고리즘으로 매우 중요하다.
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/cbd1dac8-5fd5-4b9d-a26c-72dcad945a59/Untitled.png)
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/ac248dab-0bb4-4a0b-85f0-a9abdc9f05c7/Untitled.png)
+
+위  고양이 사진(2x2)을 예시로 입력(X)을  받으면 , 가중치 파라미터(W)와 곱하여 카테고리 score 값(f(x,w))인 10을 만든다.  score값이 높을수록 고양이일 확률이 높다.
+
+ W*x 에 bias(편향값)을 더하는데,  bias는 입력과는 직접적인 관계를 가지지 않으나 이미지 라벨의 불균형한 상태 보완하기 위해 사용된다.
+
+- 가중치 행렬의 행벡터를 가지고 다시 이미지로 나타낼 수 있다.
+    
+    ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/703c19d3-e5cd-41bd-8e7d-b2e7391716f8/Untitled.png)
+    
+- Linear Classifier의 단점
+    - 이미지 변동이 있어도 그것의 평균을 결과로서 보여준다.
+    - 그래서 말 카테고리의 이미지를 보면 말의 머리가 두개가 나타난다.
+    - **Multimodal problem:** 선형으로 분류할 수 없는 데이터
+        
+        ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/1a435041-77b4-46f9-ad63-6aaa68df3a75/Untitled.png)
+        
+        ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/c8e1f972-073f-4ad1-a71d-f3e3fbbbf5b4/Untitled.png)
+        
+        - Linear Classifier는 각 클래스를 구분해주는 선형 경계 역할을 한다.
+
+## KNN과 Linear Classifier의 차이점
+
+KNN
+
+- 시작할 때 파라미터가 없다.
+- 테스트 할 때 전체 train set을 가지고 테스트를 한다.
+
+Linear Classifier
+
+- 테스트 할 때 train set의 전체 데이터는 필요없고 train의 결과인 w을 가지고 테스트를 한다.
+- KNN보다 효율적
+- 우리가 해야할 일은 F(function) 잘 구성하기
+    - 가장 쉬운 방법이 곱하기 → Linear Classifier
