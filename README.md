@@ -6,10 +6,10 @@
 조유림
 
 #### 🐣 Member of Novice Course
-류현지 박소윤 손수경 안재현 이다연 임아현 정시은 조은영 최수연   
+류현지 박소윤 안재현 이다연 임아현 정시은 조은영 최수연   
 
 #### 🕊️ Member of Advanced Course
-송지빈   
+송지빈 손수경 정시은    
 
 <br/>   
 
