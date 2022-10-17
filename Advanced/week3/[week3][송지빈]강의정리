@@ -1,0 +1,131 @@
+강의 정리 노션 링크
+https://insidious-index-854.notion.site/3-CNN-3-711070dc73104e3a898bbc5f65a1b5ba
+
+# 3주차 - CNN의 이해(3)
+
+# Lecture 5 - Convolutional Neural Networks
+
+- CNN은 Detection, Segmentation, Self-Driving Cars, Art 등에 사용된다.
+
+## Fully Connected Layer
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/8894ef7f-d56b-433f-825d-0d6e3edd1e17/Untitled.png)
+
+if 32 * 32 * 3 image,
+
+- input = 3072 * 1
+- weight = 10 * 3072
+- activation = 10 * 1
+
+## Convolution Layer
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/9e12b5a4-96a8-4711-8c8e-6f46a2e4acc7/Untitled.png)
+
+if 32 * 32 * 3 image, 
+
+- input = 32 * 32 * 3 (3차원 구조 유지)
+- weight = 5 * 5 * 3 filter
+- activation map = 28 * 28 * 1
+
+이미지의 depth와 filter의 depth가 같아야한다.
+
+filter가 여러 개 사용하면 층이 생기고, 각자 다른 activation map (28 * 28 * N)을 생성한다.
+
+### Padding
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/4c1aa06d-57df-4cba-805b-37eeea8a2490/Untitled.png)
+
+CNN 연산 수행하기 전에 input 주변을 특정값으로 채워 늘리는 것
+
+- zero-padding
+- 목적: input의 가장자리 정보 손실 문제를 막는다.
+
+### Stride
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/421b694d-3d6e-4457-ab3d-d4f95438a193/Untitled.png)
+
+filter가 이동하는 간격
+
+- stride로 출력 데이터의 크기를 조절할 수 있다.
+
+## Pooling Layer
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/564c8661-6416-4d85-9e9e-cd8f1ed6bf25/Untitled.png)
+
+데이터의 공간적 크기를 축소시킨다.
+
+- pooling을 통해 모델의 전체 매개변수의 수를 줄일 수 있다.
+- Max-Pooling, Average-Pooling 등이 있다.
+
+# Lecture 9 - CNN Architectures
+
+## AlexNet (2012)
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/afd0a9db-72e7-4a13-967c-b99682af5581/Untitled.png)
+
+- 최초의 Large Scale CNN 모델
+- Convolution Layer와 Pooling Layer가 반복적으로 진행되는 패턴
+- LeNet 보다 layer가 많다.
+- 활성함수: ReLU
+- 정규화: Dropout
+- 최적화: SGD momentum
+- if input 227 * 227 * 3,
+    
+    output 55 * 55 * 96
+    
+    param 개수 11*11*3*96 = 348348
+    
+
+## VGGNet (2014)
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/52122474-a9d9-4eeb-a16b-973d0027b929/Untitled.png)
+
+- Conv Layer와 Pooling Layer가 반복적으로 진행되는 패턴
+- AlexNet 보다 더 깊고(layer개수 많아짐) 3 * 3 size filter 사용
+- GoogleNet 다음으로 성능이 우수하다.
+- 다른 데이터에서도 특징 추출이 잘 되고, 일반화 능력이 뛰어나다.
+
+## GoogleNet (2014)
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/ff7115b5-e4ce-4bfd-a1f2-da63500cb37c/Untitled.png)
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/5044880a-ba3e-489f-b227-52d48433c208/Untitled.png)
+
+- 네트워크 더 깊어짐(22개의 layer)
+- 연산 효율 증가
+- Inception module 여러 개 쌓음
+    - inception module 내부에 다양한 필터들이 병렬로 존재
+- FC-Layer 없앰 → 파라미터 줄일 수 있음
+- 문제: 레이어, pooling을 거칠 때마다 Depth가 늘어남 → 계산량이 커짐
+- 방법: Bottleneck Block(1 * 1 conv) 사용 = 입력을 더 낮은 차원으로 보내 계산 복잡도를 줄일 수 있다.
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/1ada72f3-79b7-4848-a0fb-e94e742fdeae/Untitled.png)
+
+- 보조 분류기(일반적으로 Average Pooling) → Gradient Vanishing 문제 해결
+
+## ResNet (2015)
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/0232bfdc-210f-4244-8a35-9cfd8c0071be/Untitled.png)
+
+- 깊은 네트워크 (152 layer)
+- residual connection 사용
+- 문제: 모델이 깊어질 수록 최적화 어려워 성능 저하되기 쉬움
+- 해결: identity mapping = 얕은 네트워크를 가져와 input을 output으로 내보냄
+    - residual block안에 identity mapping을 사용해 출력단으로 보내고, 실제 layer은 그 안에 추가된 F(x)변화량 만 학습
+    - 최종 출력값: input X + 변화량(F(x))
+- 마지막 FC layer 없앰 → 파라미터 수 줄임 → Global Average Pooling 사용하여 FC layer 하나만 갖게 함
+- Conv layer 다음 Batch Normalization(BN)을 사용한다.
+- 초기화는 Xavier를 사용하는데 2로 나눈 것을 쓴다. 이렇게 하면 SGD+Momemtum에서 좋은 성능을 가진다.
+- learning rate 는 0.1로 설하고 loss가 줄어들지 않도록 조금씩 줄여준다.
+- dropout은 사용하지 않는다.
+- weight decay는 1e-5 이다
+
+## GoogleNet + ResNet (2017)
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/cbfa8ecb-da72-4031-a74f-b982c6942d01/Untitled.png)
+
+- 2017년 기준으로 모델 성능을 비교했을 GoogleNet과 ResNet을 결합한 모델이 가장 좋은것을 확인할 수 있다.(원의크기 메모리 크기 , x축: 연산량, y축: 성능(정확도))
+- VGG : 기장 많은 메모리를 요구하고 연산량도 많다.
+- GoogleNet : VGG와 비교해서 성능은 비슷하지 메모리와 연산량을 줄였다.
+- AlexNet : 연산량은 적고 성능도 낮다. 메모리또한 많이 요구된다.
+- ResNet : 메모리나 연산이 중간이고 성능이 제일 좋다.
