@@ -1,0 +1,2 @@
+model_checkpoint_path: "minst_cnn_func-9"
+all_model_checkpoint_paths: "minst_cnn_func-9"
